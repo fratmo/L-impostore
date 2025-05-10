@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L'Impostore Online</title>
+    <!-- Google Fonts Link -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Import Font (se lo usi da Google Fonts) - Già incluso con il link HTML sopra */
+
+        :root {
+            --bg-dark-primary: #1e272e;    /* Sfondo principale molto scuro */
+            --bg-dark-secondary: #2c3a47; /* Sfondo per card/container */
+            --text-light-primary: #dcdde1; /* Testo principale chiaro */
+            --text-light-secondary: #a4a5a7; /* Testo secondario/label */
+            
+            --accent-red: #e84118;      /* Rosso Impostore, errori */
+            --accent-blue: #00a8ff;     /* Blu per azioni, info */
+            --accent-yellow: #fbc531;   /* Giallo per attenzione, indizi */
+            --accent-green: #2ecc71;    /* Verde per successo, azioni positive */
+            --accent-grey: #7f8c8d;     /* Grigio per elementi disabilitati/neutri */
+
+            --border-color: #4a6280;    /* Colore per bordi sottili */
+            --shadow-color: rgba(0,0,0,0.2);
+
+            --font-family-main: 'Nunito', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Font principale */
+        }
+
+        /* Reset base e Stili Globali */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family-main);
+            background-color: var(--bg-dark-primary);
+            color: var(--text-light-primary);
+            line-height: 1.6;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: var(--bg-dark-secondary);
+            padding: 30px; /* Aumentato padding */
+            border-radius: 12px; /* Bordi più arrotondati */
+            box-shadow: 0 8px 25px var(--shadow-color);
+            width: 100%;
+            max-width: 750px; /* Leggermente più largo */
+            text-align: center;
+        }
+
+        /* Titoli */
+        h1 {
+            color: var(--accent-red);
+            margin-bottom: 15px;
+            font-size: 2.5em; /* Più grande */
+            font-weight: 700;
+        }
+        h1 .online-tag {
+            font-size: 0.5em; /* Proporzionalmente più piccolo */
+            color: var(--accent-blue);
+            font-weight: 600;
+            vertical-align: middle;
+        }
+        h2.sub-title {
+            color: var(--accent-yellow);
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 12px;
+            font-size: 1.8em; /* Più grande */
+            font-weight: 700;
+        }
+        h3 { /* Per i titoli delle sezioni interne come PlayerList, GameLog */
+            color: var(--accent-blue);
+            margin-top: 0;
+            margin-bottom: 10px; /* Spazio sotto h3 */
+            font-size: 1.3em;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+
+        /* Schermate */
+        .screen {
+            display: none;
+            padding: 20px; /* Padding interno alle schermate */
+            border-radius: 8px; /* Bordi arrotondati per le schermate interne */
+            margin-top: 20px;
+            background-color: rgba(0,0,0,0.1); /* Sfondo leggermente diverso per le "card" di schermata */
+        }
+        .screen.active {
+            display: block;
+        }
+
+        /* Etichette e Input */
+        label {
+            display: block;
+            margin-top: 18px;
+            margin-bottom: 8px;
+            font-weight: 600; /* Leggermente più bold */
+            color: var(--text-light-secondary);
+            text-align: left;
+            font-size: 0.95em;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="password"] {
+            width: 100%; /* Usa width 100% e box-sizing è già border-box */
+            padding: 12px 15px; /* Più padding */
+            margin-bottom: 18px; /* Più spazio sotto */
+            border: 1px solid var(--border-color);
+            border-radius: 6px; /* Bordi input più arrotondati */
+            background-color: #3b4a5a; /* Sfondo input più scuro */
+            color: var(--text-light-primary);
+            font-size: 1em;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(0, 168, 255, 0.3); /* Ombra focus */
+        }
+
+        /* Bottoni */
+        button {
+            color: white;
+            border: none;
+            padding: 12px 28px; /* Padding leggermente aggiustato */
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 1em;
+            font-weight: 600; /* Testo bottone più bold */
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+            margin-top: 12px;
+            margin-right: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+        }
+        button:hover {
+            transform: translateY(-2px); /* Effetto sollevamento più pronunciato */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        button:active {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+        }
+
+        button.primary, button#joinRoomButton, button#startGameButton { /* Esempi di bottoni primari */
+            background-color: var(--accent-red);
+        }
+        button.primary:hover, button#joinRoomButton:hover, button#startGameButton:hover {
+            background-color: #d6300f; /* Rosso più scuro per hover */
+        }
+
+        button.secondary {
+            background-color: var(--accent-blue);
+        }
+        button.secondary:hover {
+            background-color: #008fdd; /* Blu più scuro */
+        }
+
+        button.action {
+            background-color: var(--accent-green);
+        }
+        button.action:hover {
+            background-color: #27ae60; /* Verde più scuro */
+        }
+        
+        button.player-vote-button { /* Bottoni specifici per il voto */
+            background-color: var(--accent-blue); 
+            margin: 8px 5px; /* Più spazio */
+            min-width: 150px; /* Larghezza minima per uniformità */
+        }
+        button.player-vote-button:hover {
+             background-color: var(--accent-yellow);
+             color: var(--bg-dark-primary);
+        }
+
+
+        button:disabled {
+            background-color: var(--accent-grey);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            opacity: 0.7;
+        }
+
+        button.link-button {
+            background: none;
+            color: var(--accent-blue);
+            padding: 5px 10px;
+            text-decoration: underline;
+            margin-top: 8px;
+            box-shadow: none;
+        }
+        button.link-button:hover {
+            color: #008fdd;
+            background: none;
+            transform: none; /* No hover effect per link button */
+            box-shadow: none;
+        }
+
+        /* Messaggi di Errore */
+        .error-message {
+            color: var(--text-light-primary); /* Testo chiaro su sfondo errore */
+            background-color: rgba(232, 65, 24, 0.7); /* Sfondo errore più opaco */
+            border: 1px solid var(--accent-red);
+            padding: 10px 15px; /* Più padding */
+            border-radius: 6px;
+            font-weight: 600; /* Testo errore più bold */
+            margin-bottom: 18px;
+            margin-top: 8px;
+            text-align: left;
+        }
+
+        /* Liste (Giocatori, Indizi) e Log */
+        #playerListContainer, #gameLogContainer, #lobbyPlayerListContainer {
+            margin-top: 25px;
+            padding: 20px; /* Più padding */
+            background-color: rgba(0,0,0,0.15); /* Leggermente trasparente per profondità */
+            border-radius: 8px;
+            text-align: left;
+        }
+
+        #gameLog {
+            max-height: 180px; /* Più altezza per log */
+            overflow-y: auto;
+            background-color: var(--bg-dark-primary); /* Sfondo log ancora più scuro */
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 0.85em; /* Testo log leggermente più piccolo */
+            line-height: 1.5;
+        }
+        #gameLog p {
+            margin: 4px 0;
+            padding-bottom: 4px;
+            border-bottom: 1px dotted #4a6280; /* Dotted border per separatori log */
+            color: var(--text-light-secondary); /* Testo log più tenue */
+        }
+        #gameLog p:first-child {
+            color: var(--accent-yellow); /* Primo log più evidente */
+            font-weight: 600;
+        }
+        #gameLog p:last-child { border-bottom: none; }
+
+        #playerList div, #lobbyPlayerList div {
+            padding: 10px 12px; /* Più padding */
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.2s ease;
+        }
+        #playerList div:hover, #lobbyPlayerList div:hover {
+            background-color: rgba(255,255,255,0.05); /* Effetto hover leggero */
+        }
+        #playerList div:last-child, #lobbyPlayerList div:last-child { border-bottom: none; }
+
+        #playerList div.me, #lobbyPlayerList div.me {
+            font-weight: 700; /* Più bold per "me" */
+            background-color: rgba(0, 168, 255, 0.1);
+            color: var(--accent-blue); /* Blu per "me" */
+            border-left: 3px solid var(--accent-blue); /* Indicatore laterale */
+            padding-left: 10px;
+        }
+        #playerList div.host, #lobbyPlayerList div.host {
+            color: var(--accent-yellow); /* Giallo per "Host" */
+            font-weight: 700;
+        }
+        #playerList div.host::before, #lobbyPlayerList div.host::before {
+            content: "👑 "; /* Emoji corona per l'host */
+            margin-right: 5px;
+        }
+
+        .player-status-indicator {
+            font-size: 0.85em;
+            color: var(--text-light-secondary);
+            margin-left: auto; /* Spinge a destra */
+            padding-left: 10px;
+        }
+
+        /* Contenitori di Messaggi Specifici (Rivelazione Ruolo, Risultati, ecc.) */
+        #roleRevealScreenMessage, #resultScreenMessage, #waitingMessage, #impostorGuessMessage, #lobbyMessageContainer {
+            padding: 25px; /* Più padding */
+            border: 2px dashed var(--accent-yellow);
+            margin-bottom: 25px;
+            border-radius: 8px;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0,0,0,0.1);
+            text-align: center; /* Assicura testo centrato */
+        }
+        #roleRevealScreenMessage p, #impostorGuessMessage p, #lobbyMessageContainer p {
+            font-size: 1.1em; /* Testo leggermente più grande */
+            margin-bottom: 10px;
+        }
+        #roleRevealScreenMessage #roleText { /* Testo del ruolo più grande */
+            font-size: 1.5em;
+            font-weight: 700;
+            color: var(--accent-red); /* Default per impostore */
+        }
+        #roleRevealScreenMessage #roleText.onesto { /* Classe da aggiungere via JS se onesto */
+            color: var(--accent-green);
+        }
+
+        #resultScreenMessage {
+            font-size: 1.2em; /* Testo risultato più grande */
+            font-weight: 600;
+        }
+        #lobbyMessageContainer {
+            border-style: solid; /* Bordo solido per la lobby */
+            border-color: var(--accent-blue);
+        }
+
+        /* Separatore Orizzontale */
+        hr {
+            border: none;
+            border-top: 2px solid var(--border-color); /* Linea più spessa */
+            margin: 30px 0; /* Più spazio */
+        }
+
+        /* Liste Indizi */
+        ul#discussionCluesList, ul#cluesList { /* Stile unificato per entrambe le liste indizi */
+            list-style-type: none;
+            padding: 0;
+            text-align: left;
+            margin-top: 15px; /* Spazio sopra la lista */
+        }
+        ul#discussionCluesList li, ul#cluesList li {
+            background-color: var(--bg-dark-primary); /* Sfondo indizio più scuro */
+            padding: 12px 15px; /* Più padding */
+            margin-bottom: 10px; /* Più spazio tra indizi */
+            border-radius: 6px;
+            color: var(--text-light-primary);
+            border-left: 4px solid var(--accent-yellow); /* Indicatore laterale più spesso */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            font-size: 1.05em; /* Testo indizio leggermente più grande */
+        }
+        ul#cluesList h3 { /* Titolo per la lista indizi DENTRO la schermata clue */
+            color: var(--accent-yellow);
+            margin-top: 25px;
+            margin-bottom: 10px;
+            text-align: left;
+            font-size: 1.1em;
+        }
+        /* Display Nome Giocatore */
+        #playerNameDisplay {
+            margin-bottom: 20px;
+            font-weight: 700; /* Più bold */
+            color: var(--accent-green); /* Verde per il nome giocatore */
+            font-size: 1.2em; /* Più grande */
+            min-height: 1.5em; /* Evita salti */
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>L'Impostore <span class="online-tag">(Online)</span></h1>
+        <div id="playerNameDisplay" style="margin-bottom: 15px; font-weight: bold; color: #1abc9c; min-height: 1.2em;"></div>
+
+        <!-- Schermata Inserimento Room Password (Default) -->
+        <div id="roomPasswordScreen" class="screen active"> <!-- Inizia attivo -->
+            <h2 class="sub-title">Unisciti a una Partita</h2>
+            <label for="playerNameInput">Il tuo Nome:</label>
+            <input type="text" id="playerNameInput" placeholder="Es: Mario">
+            <label for="roomPasswordInput">Password della Stanza:</label>
+            <input type="text" id="roomPasswordInput" placeholder="Chiedi all'host">
+            <div id="roomPasswordError" class="error-message" style="display: none;"></div>
+            <button id="joinRoomButton" class="action">Unisciti!</button>
+            <hr>
+            <p style="color: var(--text-light-secondary);">Sei l'host?</p>
+            <button onclick="showScreen('setupScreen')" class="secondary">Crea una Nuova Partita</button>
+        </div>
+
+        <!-- Schermata di Setup (per l'Host) -->
+        <div id="setupScreen" class="screen">
+            <h2 class="sub-title">Crea Nuova Partita (Host)</h2>
+            <label for="numPlayers">Numero di Giocatori (min 3):</label>
+            <input type="number" id="numPlayers" min="3" value="3">
+            <label for="secretWord">Parola Segreta del Gioco:</label>
+            <input type="text" id="secretWord" placeholder="Es: Animali della fattoria">
+            <label for="hostRoomPasswordInput">Crea una Password per questa Stanza:</label>
+            <input type="text" id="hostRoomPasswordInput" placeholder="Es: impostore123">
+            <div id="setupError" class="error-message" style="display: none;"></div>
+            <button id="startGameButton" class="action">Crea Stanza e Procedi</button>
+            <button onclick="showScreen('roomPasswordScreen')" class="link-button">Annulla e Unisciti a una Stanza Esistente</button>
+        </div>
+
+        <!-- Schermata Lobby -->
+        <div id="lobbyScreen" class="screen">
+            <h2 class="sub-title">Lobby</h2>
+            <div id="lobbyMessageContainer">
+                <p id="lobbyMessage">In attesa di giocatori...</p>
+            </div>
+            <div id="lobbyPlayerListContainer">
+                <h3>Giocatori nella Lobby:</h3>
+                <div id="lobbyPlayerList">
+                    <!-- Lista giocatori nella lobby popolata da JS -->
+                </div>
+            </div>
+            <button id="hostStartGameLobbyButton" class="action" style="display: none;" disabled>Avvia Partita (Host)</button>
+        </div>
+        
+        <!-- Schermata Messaggio di Attesa Generico -->
+        <div id="waitingMessageScreen" class="screen">
+            <h2 class="sub-title">Attendere...</h2>
+            <div id="waitingMessage">
+                <p>Connessione o caricamento in corso...</p>
+            </div>
+        </div>
+
+        <!-- Schermata Rivelazione Ruolo -->
+        <div id="roleRevealScreen" class="screen">
+            <h2 class="sub-title">Il tuo Ruolo!</h2>
+            <div id="roleRevealScreenMessage">
+                <p id="roleText"></p> <!-- La classe .onesto o .impostore verrà aggiunta da JS -->
+                <p id="secretWordTextRole"></p>
+            </div>
+            <button id="seenRoleButton" class="action">Ho capito!</button>
+        </div>
+
+        <!-- Schermata Inserimento Indizi -->
+        <div id="clueScreen" class="screen">
+            <h2 class="sub-title" id="clueTurnTitle"></h2>
+            <label for="clueInput">Il tuo indizio (una parola):</label>
+            <input type="text" id="clueInput" placeholder="Una sola parola collegata">
+            <div id="clueError" class="error-message" style="display: none;"></div>
+            <button id="submitClueButton" class="action">Invia Indizio</button>
+            <hr>
+            <ul id="cluesList"> <!-- Mostra indizi dati finora -->
+                 <!-- h3 e li verranno popolati da JS -->
+            </ul>
+        </div>
+
+        <!-- Schermata Visualizzazione Indizi e Discussione -->
+        <div id="discussionScreen" class="screen">
+            <h2 class="sub-title">Indizi Forniti (Discutete!):</h2>
+            <ul id="discussionCluesList">
+                 <!-- Gli indizi verranno inseriti qui da JS -->
+            </ul>
+            <button id="startVotingButton" class="action" style="display: none;">Procedi alla Votazione (Host)</button>
+        </div>
+
+        <!-- Schermata Votazione -->
+        <div id="votingScreen" class="screen">
+            <h2 class="sub-title" id="votingTitle">Votazione: Chi è l'Impostore?</h2>
+            <p id="voterNameText" style="min-height: 1.2em; color: var(--text-light-secondary);"></p>
+            <div id="voteButtonsContainer" style="margin-top:10px;">
+                <!-- I bottoni per votare verranno inseriti qui da JS -->
+            </div>
+            <div id="voteError" class="error-message" style="display: none;"></div>
+        </div>
+        
+        <!-- Schermata Tentativo Impostore -->
+        <div id="impostorGuessScreen" class="screen">
+            <h2 class="sub-title">Impostore Scoperto!</h2>
+            <div id="impostorGuessMessage">
+                <p>L'impostore (<span id="caughtImpostorName" style="color: var(--accent-red); font-weight:bold;"></span>) è stato identificato!</p>
+                <p>Ora hai una possibilità di vincere indovinando la parola segreta.</p>
+            </div>
+            <label for="impostorGuessInput">La tua ipotesi sulla parola segreta:</label>
+            <input type="text" id="impostorGuessInput" placeholder="Qual era la parola?">
+            <div id="impostorGuessError" class="error-message" style="display: none;"></div>
+            <button id="checkImpostorGuessButton" class="action">Conferma Ipotesi</button>
+        </div>
+
+        <!-- Schermata Risultati -->
+        <div id="resultScreen" class="screen">
+            <h2 class="sub-title">Risultato Finale</h2>
+            <div id="resultScreenMessage">
+                <!-- Il messaggio di risultato verrà inserito qui da JS -->
+            </div>
+            <p>La parola segreta era: <strong id="finalSecretWord" style="color: var(--accent-green);"></strong></p>
+            <p>L'Impostore era: <strong id="finalImpostorName" style="color: var(--accent-red);"></strong></p>
+            <button id="resetGameButton" class="secondary" style="display: none;">Resetta Partita (Host)</button>
+        </div>
+
+        <!-- Contenitore per la Lista Giocatori (generale, visibile in più fasi) -->
+        <div id="playerListContainer" style="margin-top:25px;">
+            <h3>Giocatori Attuali nella Stanza:</h3>
+            <div id="playerList">
+                 <!-- La lista dei giocatori verrà popolata da JS -->
+            </div>
+        </div>
+        
+        <!-- Contenitore per i Log di Gioco -->
+        <div id="gameLogContainer" style="margin-top: 15px;">
+            <h3>Log di Gioco:</h3>
+            <div id="gameLog">
+                 <!-- I messaggi di log verranno inseriti qui da JS -->
+            </div>
+        </div>
+
+    </div>
+    <script src="client.js"></script> <!-- Il tuo file JavaScript -->
+</body>
+</html>
